@@ -1,0 +1,10 @@
+#C:\ProgramData\Anaconda3\lib\site-packages\ipykernel_launcher.py -f C:\Users\Frosina\AppData\Roaming\jupyter\runtime\kernel-95f960ab-354f-4502-a83f-1e6d6be16cce.json
+# GMT Thu Mar 19 18:51:33 2020
+# test
+a b f
+b c
+c d
+d e
+e f
+f
+g
