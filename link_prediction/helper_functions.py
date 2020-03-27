@@ -1,4 +1,5 @@
 import random
+from igraph import Graph
 
 
 def split_data(edge_list, percent):
@@ -12,7 +13,7 @@ def split_data(edge_list, percent):
     """
     random.seed(350)
     indexes = range(len(edge_list))
-    test_indexes = set(random.sample(indexes, len(indexes) * percent))  # removing percent edges from test data
+    test_indexes = set(random.sample(indexes, int(len(indexes) * percent)))  # removing percent edges from test data
     train_indexes = set(indexes).difference(test_indexes)
     test_list = [edge_list[i] for i in test_indexes]
     train_list = [edge_list[i] for i in train_indexes]
@@ -41,3 +42,7 @@ def generate_negative_samples(graph, number):
         number -= 1
 
     return result
+
+
+g = Graph.Full(3)
+print(split_data(g.es, 0.2))
