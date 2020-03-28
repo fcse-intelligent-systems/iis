@@ -44,5 +44,6 @@ def generate_negative_samples(graph, number):
     return result
 
 
-g = Graph.Full(3)
-print(split_data(g.es, 0.2))
+if __name__ == '__main__':
+    g = Graph.Full(3)
+    print(list(map(len, split_data(g.es, 0.2))))

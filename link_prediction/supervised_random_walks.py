@@ -1,6 +1,7 @@
 import time
 import functools
 import numpy as np
+from tqdm import tqdm
 from scipy.optimize import fmin_l_bfgs_b
 
 
@@ -313,3 +314,35 @@ def callback_func(x):
     with open('results.txt', 'a') as file:
         file.write(time.strftime("%c") + '\t' + '\t'.join(str(item) for item in x.tolist()) + '\n')
 
+
+def random_walks(graph, parameters, sources, alpha=0.3, max_iter=500):
+    """ Random walk with given parameters and directed graph
+    :param graph: igraph object
+    :type graph: igraph.Graph
+    :param parameters: optimized parameter vector w
+    :type parameters: numpy.array
+    :param sources: list of indices of source nodes
+    :type sources: list(int)
+    :param alpha: restart probability
+    :type alpha: float
+    :param max_iter: maximum number of iterations
+    :type max_iter: int
+    :return: p vector for every source node
+    :rtype: numpy.array
+    """
+    epsilon = 1e-12
+    small_epsilon = 1e-18
+
+    features = np.array([graph.es[feature] for feature in graph.es.attributes()]).T
+
+    strengths = logistic_edge_strength_function(parameters, features) + small_epsilon
+    graph.es['strength'] = strengths.flatten()
+    A = np.array(graph.get_adjacency(attribute='strength').data)
+    Q_prim = get_stochastic_transition_matrix(A)
+    result = dict()
+    for source in tqdm(sources):
+        Q = get_transition_matrix(Q_prim, source, alpha)
+        p = iterative_page_rank(Q, epsilon, max_iter)
+        result[source] = [p]
+
+    return result
