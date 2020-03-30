@@ -1,5 +1,6 @@
 import random
 from igraph import Graph
+from collections import Counter
 
 
 def split_data(edge_list, percent):
@@ -12,11 +13,15 @@ def split_data(edge_list, percent):
     :rtype: list, list
     """
     random.seed(350)
-    indexes = range(len(edge_list))
+    node_degrees = Counter([es.source for es in edge_list])
+
+    available_edges = [edge for edge in edge_list if node_degrees[edge.source] > 3 and node_degrees[edge.target] > 3]
+    other_edges = [edge for edge in edge_list if not node_degrees[edge.source] > 3 and node_degrees[edge.target] > 3]
+    indexes = range(len(available_edges))
     test_indexes = set(random.sample(indexes, int(len(indexes) * percent)))  # removing percent edges from test data
     train_indexes = set(indexes).difference(test_indexes)
-    test_list = [edge_list[i] for i in test_indexes]
-    train_list = [edge_list[i] for i in train_indexes]
+    test_list = [available_edges[i] for i in test_indexes]
+    train_list = [available_edges[i] for i in train_indexes] + other_edges
     return train_list, test_list
 
 
