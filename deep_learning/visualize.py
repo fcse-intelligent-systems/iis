@@ -4,6 +4,13 @@ import pandas as pd
 
 
 def plot_graph_loss(file_name, model_name):
+    """
+    Plots validation and train loss,
+    :param file_name: name of the csv file containing values for validation and train loss functions
+    :type file_name: str
+    :param model_name: name of the model
+    :type model_name: str
+    """
     values = pd.read_table(file_name, sep=',')
     data = pd.DataFrame()
     data['epoch'] = list(values['epoch'].get_values() + 1) + list(values['epoch'].get_values() + 1)
