@@ -19,11 +19,11 @@ from gem.utils import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
 from .sdne_utils import *
 
-from keras.layers import Input, Dense, Lambda, Subtract
-from keras.models import Model, model_from_json
-import keras.regularizers as Reg
-from keras.optimizers import SGD, Adam
-from keras import backend as KBack
+from tensorflow.keras.layers import Input, Dense, Lambda, Subtract
+from tensorflow.keras.models import Model, model_from_json
+import tensorflow.keras.regularizers as Reg
+from tensorflow.keras.optimizers import SGD, Adam
+from tensorflow.keras import backend as KBack
 
 from time import time
 
@@ -138,7 +138,7 @@ class SDNE(StaticGraphEmbedding):
             ) * y_true
 
         # Model
-        self._model = Model(input=x_in, output=[x_diff1, x_diff2, y_diff])
+        self._model = Model(inputs=x_in, outputs=[x_diff1, x_diff2, y_diff])
         sgd = SGD(lr=self._xeta, decay=1e-5, momentum=0.99, nesterov=True)
         # adam = Adam(lr=self._xeta, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
         self._model.compile(
@@ -149,8 +149,8 @@ class SDNE(StaticGraphEmbedding):
 
         self._model.fit_generator(
             generator=batch_generator_sdne(S, self._beta, self._n_batch, True),
-            nb_epoch=self._num_iter,
-            samples_per_epoch=S.nonzero()[0].shape[0] // self._n_batch,
+            epochs=self._num_iter,
+            steps_per_epoch=S.nonzero()[0].shape[0] // self._n_batch,
             verbose=1
         )
         # Get embedding for all points
