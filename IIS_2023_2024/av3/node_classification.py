@@ -17,19 +17,19 @@ if __name__ == '__main__':
     model = to_hetero(base_model, dataset.metadata(), aggr='sum')
 
     train_input_nodes = ('movie', dataset['movie'].train_mask)
-    train_loader = NeighborLoader(dataset, num_neighbors=[10, 10],
+    train_loader = NeighborLoader(dataset, num_neighbors=[10, 10, 10],
                                   shuffle=True, input_nodes=train_input_nodes,
-                                  batch_size=16)
+                                  batch_size=128)
 
     val_input_nodes = ('movie', dataset['movie'].val_mask)
-    val_loader = NeighborLoader(dataset, num_neighbors=[10, 20],
-                                shuffle=True, input_nodes=val_input_nodes,
-                                batch_size=16)
+    val_loader = NeighborLoader(dataset, num_neighbors=[10, 10, 10],
+                                shuffle=False, input_nodes=val_input_nodes,
+                                batch_size=128)
 
     test_input_nodes = ('movie', dataset['movie'].test_mask)
-    test_loader = NeighborLoader(dataset, num_neighbors=[10, 20],
-                                 shuffle=True, input_nodes=test_input_nodes,
-                                 batch_size=16)
+    test_loader = NeighborLoader(dataset, num_neighbors=[10, 10, 10],
+                                 shuffle=False, input_nodes=test_input_nodes,
+                                 batch_size=128)
 
     optimizer = SGD(model.parameters(), lr=0.0001)
     criterion = CrossEntropyLoss()
